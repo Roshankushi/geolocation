@@ -10,6 +10,8 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 // import AddItem from './src/components/additem'
 import Registration from './src/components/registration';
+import LoginComponent from './src/components/LoginComponent';
+import Routerconfig from './src/routes/AppRouter';
 
 
 
@@ -24,11 +26,12 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
+     
 
-        {/* <AddItem/> */}
-       <Registration/>
-      </View>
+        
+       <Routerconfig/>
+       
+     
     );
   }
 }

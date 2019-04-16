@@ -6,66 +6,55 @@ import {StyleSheet,
   Button,
   TouchableHighlight,
   Image,
-  Alert} from 'react-native'
-import {db} from '../services/config'
+  ToastAndroid } from 'react-native';
+  import{ registerUser }from '../services/Services';
+  const Toast = (props) => {
+      if (props.visible) {
+        ToastAndroid.showWithGravityAndOffset(
+          props.message,
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return null;
+      }
+      return null;
+    };
 
-let addregistration =(reg) =>{
-  db.ref('/regs').push({
-    name:reg.name,
-    password:reg.password,
-    email:reg.email,
-    phone:reg.phone,
-  })
-}
 
-export default class Registration extends Component {
-constructor(props){
-  super(props);
-  this.state={
-    regs:[],
-    name:'',
-    password:'',
-    email:'',
-    phone:''
-  }
-  this.signupChanger =this.signupChanger.bind(this);
-  this.nameChanger =this.nameChanger.bind(this);
-  this.passwordChanger =this.passwordChanger.bind(this);
-  this.emailChanger =this.emailChanger.bind(this);
-  this.phoneChanger =this.phoneChanger.bind(this);
-}
 
-signupChanger(e){
-  addregistration(this.state);
-}
+export default class RegistrationComponent extends Component {
+    static navigationOptions = ({ navigation }) => {
+        navigation.title = "RegistrationComponent"
 
-passwordChanger(e){
-  this.setState({
-    password:e.nativeEvent.text
-  })
-}
+    }
+        constructor(props) {
+            super(props);
+            this.state = {
+                visible:false,
+                message:'User Created',
+            user:{ username: '', password: '', email: '', phone_number: ''}
+            }
 
-emailChanger(e){
-  this.setState({
-    email:e.nativeEvent.text
-  })
-}
+            this.handleChange=this.handleChange.bind(this);
+            this.AddUser=this.AddUser.bind(this)
+        }
 
-nameChanger(e){
-  this.setState({
-    name:e.nativeEvent.text
-  })
-}
 
-phoneChanger(e){
-  this.setState({
-    phone:e.nativeEvent.text
-  })
-}
+    AddUser(){
+        registerUser(this.state.user).then(result=>{
+            this.setState({message:'User Created Successfully',visible:true});
+        }).catch(err=>{
+            this.setState({message:err.message,visible:true});
+        });
+    }
+    handleChange(e,fieldName){
+        let currentState=this.state;
+        currentState.user[fieldName]=e.nativeEvent.text;
+        this.setState(currentState);
+    }
 
-onClickListener = (viewId) => {
-  Alert.alert("Alert", "Button pressed "+viewId);
-}
 
   render() {
     return (
@@ -76,7 +65,9 @@ onClickListener = (viewId) => {
             placeholder="Full name"
             keyboardType="email-address"
             underlineColorAndroid='transparent'
-           onChange={this.nameChanger}/>
+            onChange={(e)=>{
+                this.handleChange(e,'username')
+            }} />
       </View>
       <View style={styles.inputContainer}>
         <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db'}}/>
@@ -84,7 +75,9 @@ onClickListener = (viewId) => {
             placeholder="Password"
             secureTextEntry={true}
             underlineColorAndroid='transparent'
-onChange={this.passwordChanger}/>
+            onChange={(e)=>{
+                this.handleChange(e,'password')
+            }}/>
       </View>
 
       <View style={styles.inputContainer}>
@@ -93,7 +86,9 @@ onChange={this.passwordChanger}/>
             placeholder="Email"
             keyboardType="email-address"
             underlineColorAndroid='transparent'
-           onChange={this.emailChanger}/>
+            onChange={(e)=>{
+                this.handleChange(e,'email')
+            }}/>
       </View>
       
       <View style={styles.inputContainer}>
@@ -101,13 +96,16 @@ onChange={this.passwordChanger}/>
         <TextInput style={styles.inputs}
             placeholder="Phone"
             underlineColorAndroid='transparent'
-           onChange={this.phoneChanger}/>
+            onChange={(e)=>{
+                this.handleChange(e,'phone_number')
+            }}/>
       </View>
       
 
       <TouchableHighlight>
-        <Button title="Sign up" style={styles.signUpText} onPress={this.signupChanger}>Sign up</Button>
+        <Button title="Sign up" style={styles.signUpText}  onPress={this.AddUser}>Sign up</Button>
       </TouchableHighlight>
+      <Toast visible={this.state.visible} message={this.state.message} />
     </View>
     )
   }
