@@ -14,3 +14,5 @@ let config = {
   export const db = app.database(); //For Database operations
   
   export const firebaseApp=app.auth();
+
+  

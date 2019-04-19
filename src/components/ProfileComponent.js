@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import GeolocationExample from './geolocation';
 
 
 
 
-export default class LandingComponent extends Component {
+export default class ProfileComponent extends Component {
     constructor(props) {
         super(props)
     }
@@ -21,7 +22,7 @@ export default class LandingComponent extends Component {
                 <Button title="Login" onPress={() => this.props.navigation.navigate('LoginComponent')} />
                 <Button title="RegistrationComponent" onPress={() => this.props.navigation.navigate('RegistrationComponent')} />
                 <Button title="ProfileComponent" onPress={() => this.props.navigation.navigate('ProfileComponent')} />
-     
+     <GeolocationExample/>
             </View>
 
         )
